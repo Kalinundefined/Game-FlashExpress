@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float maxSpeed = 1.0f;
-    public Text dialogText;
     public GameObject dialogBox;
+    public Text dialogText;
     
     // Start is called before the first frame update
     void Start()
