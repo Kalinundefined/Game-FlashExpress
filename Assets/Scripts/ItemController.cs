@@ -45,7 +45,7 @@ public class ItemController : MonoBehaviour
 
     public virtual void Trigger()
     {
-        GameObject.FindGameObjectWithTag("DialogBox").GetComponent<DialogBoxController>().setText(dialogList);
+        //GameObject.FindGameObjectWithTag("DialogBox").GetComponent<DialogBoxController>().setText(dialogList);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
