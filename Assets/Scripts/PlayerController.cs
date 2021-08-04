@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float maxSpeed = 1.0f;
-    public GameObject dialogBox;
-    public Text dialogText;
     
     // Start is called before the first frame update
     void Start()
@@ -19,7 +17,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
-        ShowText();
     }
 
     private void Move()
@@ -28,13 +25,5 @@ public class PlayerController : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         transform.Translate(new Vector3(horizontalInput, verticalInput, 0) * maxSpeed * Time.deltaTime);
     }
-
-    private void ShowText()
-    {
-        if (Input.GetKey("e"))
-        {
-            dialogBox.SetActive(true);
-            dialogText.text = "This is text.";
-        }
-    }
+    
 }
