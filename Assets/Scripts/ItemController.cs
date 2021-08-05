@@ -6,22 +6,24 @@ using UnityEngine.UI;
 public class ItemController : MonoBehaviour
 {
     private SpriteRenderer sprite;
-    private bool isTriggered = false;
-    private string[] dialogList;
+    public bool isTriggered = false;
+    DialogBoxController dialogBox;
+    public string[] dialogList;
     
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
+        dialogBox = GameObject.Find("UI/Canvas/DialogBox").GetComponent<DialogBoxController>();
         dialogList = new string[2]
         {
             "Hellow",
             "World"
         };       
     }
-
-    // Update is called once per frame
-    void Update()
+    public  virtual void afterDialog() { }
+        // Update is called once per frame
+        void Update()
     {
         
     }
@@ -36,16 +38,14 @@ public class ItemController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && Input.GetKey("e") && !isTriggered)
-        {
-            isTriggered = true;
+        if (collision.tag == "Player" && Input.GetKey(KeyCode.E) && !isTriggered)
             Trigger();
-        }
     }
 
     public virtual void Trigger()
     {
-        //GameObject.FindGameObjectWithTag("DialogBox").GetComponent<DialogBoxController>().setText(dialogList);
+        isTriggered = true;
+        dialogBox.setItem(this);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
