@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+public delegate void afterDialogDelegate();
 
 public class DialogBoxController : MonoBehaviour {
 	int curIndex = 0;
 	public Text dialogText;
 	private string[] dialogList;
 	public ItemController curItem;
+	private afterDialogDelegate afterDelegate = null;
+
 	// Start is called before the first frame update
 	void Start() {
 		gameObject.SetActive(false);
@@ -28,15 +31,20 @@ public class DialogBoxController : MonoBehaviour {
 				}
 				curIndex = -1;
 				gameObject.SetActive(false);
+				if (afterDelegate != null) {
+					afterDelegate();
+					afterDelegate = null;
+				}
 			}
 		}
 	}
 
-	public void setDialog(string[] _dialogList) {
+	public void setDialog(string[] _dialogList, afterDialogDelegate _afterDelegate = null) {
 		dialogList = _dialogList;
 		gameObject.SetActive(true);
 		curIndex = 0;
 		dialogText.text = dialogList[curIndex];
+		afterDelegate = _afterDelegate;
 	}
 
 	public void setItem(ItemController item) {

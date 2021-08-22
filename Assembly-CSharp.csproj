@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Assets\Hospitalinner.cs" />
     <Compile Include="Assets\Scripts\CBD.cs" />
+    <Compile Include="Assets\Scripts\ChoiceController.cs" />
     <Compile Include="Assets\Scripts\DialogBoxController.cs" />
     <Compile Include="Assets\Scripts\Eventhandler.cs" />
     <Compile Include="Assets\Scripts\GrandmaHome.cs" />

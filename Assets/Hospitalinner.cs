@@ -7,15 +7,21 @@ public class Hospitalinner : MonoBehaviour {
 	// Start is called before the first frame
 	// 
 	public Eventhandler eventhandler;
+	private DialogBoxController dialogBox;
 	void Start() {
+		dialogBox = GameObject.Find("UI/Canvas/DialogBox").GetComponent<DialogBoxController>();
 		eventhandler = GameObject.Find("eventSystem").GetComponent<Eventhandler>();
+		eventhandler.SetEvent("hospital");
 	}
 
 	// Update is called once per frame
-	void Update() {
-		eventhandler.SetEvent("hospital");
+	void Update() {		
 		if (Input.GetKeyDown("e")) {
-			SceneManager.LoadScene("World");
+			dialogBox.setDialog(new string[] { "要离开吗" }, afterDialog);
 		}
+	}
+
+	void afterDialog() {
+		SceneManager.LoadScene("World");
 	}
 }

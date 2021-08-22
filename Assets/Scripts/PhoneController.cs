@@ -5,8 +5,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PhoneController : MonoBehaviour
-{
+public class PhoneController : MonoBehaviour {
     private int state = 0;
     private int curUpState = 1;
     public float[] upDistance = new float[3] { 0f, 100f, 200f };
@@ -15,16 +14,16 @@ public class PhoneController : MonoBehaviour
     private RectTransform rectTransform;
     public GameObject chatPanel, infoPanel;
     private Vector3 localScaleInit;
-    public float firstMessagePositionX, firstMessagePositionY;
-    private float curHeight;
+    public float firstMessagePositionX, firstMessagePositionY, firstChoicePositionY;
+    private float curHeight, curChoiceHeight;
     public float[] messageHeight = new float[2] { 0f, 0f };
     public Text personName, itemName, placeName;
     public GameObject avatar;
     public Canvas UICanvas;
     private bool first;
+    private ArrayList messageList, choiceList;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         rectTransform = GetComponent<RectTransform>();
         offsetMaxInit = rectTransform.offsetMax;
         offsetMinInit = rectTransform.offsetMin;
@@ -43,13 +42,11 @@ public class PhoneController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 
-    public void NewMessage(bool isLeft, string text)
-    {
+    public void NewMessage(bool isLeft, string text) {
         Debug.Log(curHeight);
         string prefabName = (isLeft ? "Left" : "Right") + "Message" + (text.Length > 12 ? "2" : "1");
         GameObject prefabObj = (GameObject)Resources.Load("Prefabs/" + prefabName);
@@ -58,18 +55,17 @@ public class PhoneController : MonoBehaviour
         message.transform.SetParent(chatPanel.transform);
         message.transform.localScale = new Vector3(1, 1, 1);
         message.transform.Find("Text").GetComponent<Text>().text = text;
-        if (first)
-        {
+        if (first) {
             first = false;
             if (text.Length > 12) curHeight += -10;
         }
         message.GetComponent<RectTransform>().anchoredPosition = new Vector2(firstMessagePositionX, curHeight);
         curHeight += messageHeight[text.Length > 12 ? 1 : 0];
-        Debug.Log(curHeight);
+        //Debug.Log(curHeight);
+        messageList.Add(message);
     }
 
-    public void SetInfo(string avatarSrc, string person, string item, string place)
-    {
+    public void SetInfo(string avatarSrc, string person, string item, string place) {
         personName.text = person;
         itemName.text = item;
         placeName.text = place;
@@ -79,21 +75,45 @@ public class PhoneController : MonoBehaviour
         avatar.GetComponent<Image>().sprite = Sprite.Create(_tex2, new Rect(0, 0, _tex2.width, _tex2.height), new Vector2(0.5f, 0.5f));
     }
 
-    public void Clear()
-    {
-
+    public void Clear() {
+        foreach (GameObject message in messageList) {
+            Destroy(message);
+        }
+        curHeight = firstMessagePositionY;
+        first = true;
     }
 
-    private void Move(int index)
-    {
+    public void SetOption(string[] choices) {
+        int len = choices.Length;
+        for (int i = 0; i < len; ++i) {
+            string choiceText = choices[i];
+            string prefabName = "Choice" + (choiceText.Length > 12 ? "2" : "1");
+            GameObject prefabObj = (GameObject)Resources.Load("Prefabs/" + prefabName);
+            if (prefabObj == null) Debug.Log("null");
+            GameObject choice = Instantiate(prefabObj/*, firstMessagePosition, Quaternion.identity*/) as GameObject;
+            choice.transform.SetParent(chatPanel.transform);
+            choice.transform.localScale = new Vector3(1, 1, 1);
+            choice.transform.Find("Text").GetComponent<Text>().text = choiceText;
+            if (first) {
+                first = false;
+                if (choiceText.Length > 12) curChoiceHeight += -10;
+            }
+            choice.GetComponent<RectTransform>().anchoredPosition = new Vector2(firstMessagePositionX, curChoiceHeight);
+            curChoiceHeight += messageHeight[choiceText.Length > 12 ? 1 : 0];
+            choice.GetComponent<ChoiceController>().SetIndex(i);
+            //Debug.Log(curHeight);
+            choiceList.Add(choice);
+        }
+    }
+
+    private void Move(int index) {
         state = index;
         rectTransform.offsetMin = offsetMinInit + new Vector2(0, upDistance[state]);
         rectTransform.offsetMax = offsetMaxInit + new Vector2(0, upDistance[state]);
         arrow.transform.localScale = Vector3.Scale(new Vector3(1, index == 0 ? 1 : -1, 1), localScaleInit);
     }
 
-    public void ToFromChat(int index)
-    {
+    public void ToFromChat(int index) {
         Debug.Log(index);
         curUpState = index;
         Move(curUpState);
@@ -101,8 +121,7 @@ public class PhoneController : MonoBehaviour
         infoPanel.SetActive(index == 1);
     }
 
-    public void clickArrow()
-    {
+    public void clickArrow() {
         if (state == 0) Move(curUpState);
         else Move(0);
         //arrow.transform.localScale = Vector3.Scale(new Vector3(1, -1, 1), arrow.transform.localScale);

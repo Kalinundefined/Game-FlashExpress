@@ -97,7 +97,7 @@ public class Eventhandler : MonoBehaviour {
 						case Task.grandma: {
 								curStep = 2;
 								ShowDialog(new string[] { "病房入口好像在右边，进去看看吧","(病房里好几个老爷爷，精神不错，正聚在一张床边聊天。)","请问L爷爷是哪位",
-										"谢谢小伙子，告诉老太太，我好着呢" , "您客气了","(忙完了，去跑下一单吧)" });
+										"谢谢小伙子，告诉老太太，我好着呢" , "您客气了","(忙完了，去跑下一单吧)", "按E离开" });
 								PhoneMsg("送到了啊，送到了就好，谢谢你啊", true);
 								curTask = Task.child;
 								phone.SetInfo("child.png", "小孩", "试卷", "CBD");
@@ -110,6 +110,7 @@ public class Eventhandler : MonoBehaviour {
 					}
 
 				}; break;
+
 			case "school": {
 					if (curTask == Task.child) {
 						if (curStep == 0) {
